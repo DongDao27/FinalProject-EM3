@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="ThuThanh Bookstore — sách, văn phòng phẩm và đồ dùng học tập. Thanh toán khi nhận hàng.">
+  <title><%= title %> | ThuThanh Bookstore</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css?v=4">
+  <script src="/js/storefront.js?v=3" defer></script>
+</head>
+
+<body>
+  <a class="skip" href="#main">Đến nội dung chính</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="ThuThanh Bookstore - Trang chủ">
+        <img src="/brand/logo-light.svg" alt="Nhà sách Thu Thanh" width="230" height="61">
+      </a>
+      <div class="category-menu">
+        <button type="button" class="category-toggle" aria-expanded="false" aria-controls="category-list">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+          <span>Danh mục</span>
+          <svg class="category-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"
+            aria-hidden="true">
+            <path d="m4 6 4 4 4-4" />
+          </svg>
+        </button>
+        <nav id="category-list" class="category-dropdown" aria-label="Danh sách danh mục" hidden>
+
+          <% categories.forEach(item => { %>
+            <a href="/search?category=<%= encodeURIComponent(item) %>"><%= item %></a>
+          <% }) %>
+
+        </nav>
+      </div>
+      <form class="search" action="/search" method="get" role="search">
+        <label class="sr-only" for="search">Tìm sản phẩm, tác giả hoặc mã SKU</label>
+        <input id="search" name="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false"
+          aria-controls="search-suggestions" autocomplete="off" value="<%= q %>" maxlength="100"
+          placeholder="Tìm sách, đồ dùng học tập…">
+        <button type="submit" class="search-submit" aria-label="Tìm kiếm">
+          <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+            <path
+              d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z" />
+          </svg>
+        </button>
+        <div class="search-dropdown" hidden>
+          <p class="search-feedback" role="status"></p>
+          <ul id="search-suggestions" role="listbox" aria-label="Sản phẩm liên quan"></ul>
+          <a class="search-all" href="/search">Xem tất cả kết quả →</a>
+        </div>
+      </form>
+      <div class="header-actions">
+        <a class="header-action cart-link" href="/cart" aria-label="Giỏ hàng, <%= cartCount %> sản phẩm">
+          <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+            <path
+              d="M230.14,58.87A8,8,0,0,0,224,56H62.68L56.6,22.57A8,8,0,0,0,48.73,16H24a8,8,0,0,0,0,16h18L67.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,160,204a28,28,0,1,0,28-28H91.17a8,8,0,0,1-7.87-6.57L80.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,230.14,58.87ZM104,204a12,12,0,1,1-12-12A12,12,0,0,1,104,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,200,204Zm4-74.57A8,8,0,0,1,196.1,136H77.22L65.59,72H214.41Z" />
+          </svg>
+          <span>Giỏ hàng</span>
+          <span class="cart-badge" <%= cartCount === 0 ? 'hidden' : '' %>><%= cartCount %></span>
+        </a>
+
+        <% if (user) { %>
+
+          <div class="account-menu">
+            <button type="button" class="header-action account-toggle" aria-label="Tài khoản của <%= user.name %>"
+              aria-expanded="false" aria-controls="account-dropdown">
+              <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z" />
+              </svg>
+              <span class="user-name"><%= user.name.trim().split(/\s+/).at(-1) %></span>
+            </button>
+            <div id="account-dropdown" class="account-dropdown" hidden>
+              <strong class="account-full-name"><%= user.name %></strong>
+              <form action="/logout" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="account-logout">Đăng xuất</button>
+              </form>
+            </div>
+          </div>
+
+        <% } else { %>
+
+          <a class="header-action login-link" href="/login">
+            <svg class="icon" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+              <path
+                d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z" />
+            </svg>
+            <span>Đăng nhập</span>
+          </a>
+
+        <% } %>
+
+      </div>
+    </div>
+  </header>
+  <main id="main">
+
+    <% if (flash) { %>
+      <div class="container">
+        <div class="notice <%= flash.type %>" role="status"><%= flash.text %></div>
+      </div>
+    <% } %>

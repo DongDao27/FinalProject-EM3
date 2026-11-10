@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+<section class="container page-section">
+  <span class="eyebrow">NHỮNG CUỐN SÁCH BẠN CHỌN</span>
+  <h1>Giỏ sách của bạn</h1>
+  <% if (!items.length) { %>
+    <div class="empty">
+      <h2>Giỏ sách đang chờ câu chuyện đầu tiên</h2>
+      <p>Khám phá tủ sách và chọn một cuốn bạn yêu thích nhé.</p>
+      <a class="button" href="/search">Khám phá sách <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  <% } else { %>
+    <div class="cart-layout">
+      <div class="cart-items">
+        <% items.forEach(({ book, quantity }) => { %>
+          <article class="cart-item">
+            <a class="cart-cover" href="/books/<%= book._id %>"><%- include('partials/cover', { book }) %></a>
+            <div class="cart-item-info">
+              <span class="eyebrow"><%= book.category %></span>
+              <h2>
+                <a href="/books/<%= book._id %>"><%= book.title %></a>
+              </h2>
+              <p class="muted"><%= book.author %></p>
+              <strong><%= money(book.price) %></strong>
+              <form action="/cart/update" method="post" class="quantity-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="bookId" value="<%= book._id %>">
+                <label>Số lượng
+                  <input type="number" name="quantity" value="<%= quantity %>" min="0" max="99" required>
+                </label>
+                <button class="text-button">Cập nhật</button>
+              </form>
+              <form method="post" action="/cart/update">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="bookId" value="<%= book._id %>">
+                <input type="hidden" name="quantity" value="0">
+                <button class="text-button remove">Xóa khỏi giỏ</button>
+              </form>
+            </div>
+            <strong class="item-total"><%= money(book.price * quantity) %></strong>
+          </article>
+        <% }) %>
+      </div>
+      <aside class="summary">
+        <h2>Tóm tắt đơn hàng</h2>
+        <div>
+          <span>Tạm tính</span>
+          <strong><%= money(total) %></strong>
+        </div>
+        <div>
+          <span>Phí giao hàng</span>
+          <span>Miễn phí</span>
+        </div>
+        <div class="summary-total">
+          <span>Tổng cộng</span>
+          <strong><%= money(total) %></strong>
+        </div>
+        <a class="button full" href="/checkout">Tiến hành đặt hàng <span aria-hidden="true">→</span>
+        </a>
+        <p class="payment-note">Chỉ thanh toán khi nhận hàng (COD).</p>
+        <a class="continue" href="/search">Tiếp tục chọn
+          sách</a>
+      </aside>
+    </div>
+  <% } %>
+
+</section>
+<%- include('partials/footer') %>

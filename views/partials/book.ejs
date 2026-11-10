@@ -1,0 +1,26 @@
+<article class="book-card">
+  <a class="cover-link" href="/books/<%= book._id %>"><%- include('cover', { book }) %></a>
+  <div class="book-meta">
+    <span class="eyebrow" title="<%= book.category %>"><%= book.category %></span>
+    <h3>
+      <a href="/books/<%= book._id %>" title="<%= book.title %>"><%= book.title %></a>
+    </h3>
+    <p title="<%= book.author || book.publisher || book.sku || '' %>">
+      <%= book.author || book.publisher || book.sku || '' %></p>
+    <div class="book-bottom">
+      <strong><%= money(book.price) %></strong>
+      <form action="/cart/add" method="post" class="product-actions">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="bookId" value="<%= book._id %>">
+        <button class="buy-button" formaction="/cart/buy-now" aria-label="Mua ngay <%= book.title %>">Mua ngay</button>
+        <button class="icon-cart-button" aria-label="Thêm <%= book.title %> vào giỏ" title="Thêm vào giỏ hàng">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M2 3h3l3 12h11l3-9H6" />
+            <circle cx="9" cy="20" r="1.5" />
+            <circle cx="19" cy="20" r="1.5" />
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</article>

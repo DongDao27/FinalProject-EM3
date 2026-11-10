@@ -2,7 +2,7 @@
   "name": "thuthanh-bookstore",
   "version": "1.0.0",
   "private": true,
-  "description": "Nhà sách ThuThanh - Node.js MVC, MongoDB và thanh toán COD",
+  "description": "EM3 Final Project - ThuThanh Bookstore, website nhà sách Node.js MVC và MongoDB",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -10,7 +10,7 @@
     "seed": "node config/seed.js"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "dependencies": {
     "connect-mongo": "^5.1.0",

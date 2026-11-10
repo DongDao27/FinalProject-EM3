@@ -1,0 +1,15 @@
+<% if (book.image) { %>
+
+  <img class="product-image" src="<%= book.image %>" alt="<%= book.title %>" width="320" height="400" loading="lazy"
+    decoding="async">
+
+<% } else { %>
+
+  <div class="book-cover <%= book.cover %>" aria-label="Bìa minh họa: <%= book.title %>">
+    <span class="cover-publisher">THUTHANH · TUYỂN CHỌN</span>
+    <span class="cover-title"><%= book.title %></span>
+    <span class="cover-art" aria-hidden="true"></span>
+    <span class="cover-author"><%= book.author %></span>
+  </div>
+
+<% } %>

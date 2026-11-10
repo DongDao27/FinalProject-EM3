@@ -1,0 +1,119 @@
+<%- include('partials/header') %>
+
+<% if (!searching) { %>
+
+  <div class="container storefront">
+    <h1 class="sr-only">ThuThanh Bookstore — Sách và đồ dùng học tập</h1>
+    <a class="home-banner" href="/search?category=<%= encodeURIComponent('Truyện tranh') %>">
+      <img src="/images/banner-manga-corner.webp" alt="Manga Corner — khám phá truyện tranh tại ThuThanh Bookstore"
+        width="1920" height="700">
+    </a>
+
+    <% groups.forEach(group => { %>
+
+      <section class="collection">
+        <div class="section-heading">
+          <h2><%= group.title %></h2>
+          <a href="<%= group.href %>">Xem tất cả →</a>
+        </div>
+
+        <% if (group.books.length) { %>
+
+          <div class="book-grid">
+            <% group.books.forEach(book => { %>
+              <%- include('partials/book', { book }) %>
+            <% }) %>
+          </div>
+
+        <% } else { %>
+
+          <p class="empty">Chưa có sản phẩm trong mục này. <a href="/search">Xem tất cả sản phẩm</a>
+          </p>
+
+        <% } %>
+
+      </section>
+
+    <% }) %>
+
+  </div>
+
+<% } else { %>
+
+  <section class="container catalog">
+    <div class="section-heading">
+      <h1><%= title %></h1>
+      <span class="muted"><%= total %> sản phẩm</span>
+    </div>
+    <form class="catalog-filters" action="/search" method="get">
+      <label>Từ khóa
+        <input name="q" value="<%= q %>" maxlength="100" placeholder="Tên sản phẩm, tác giả hoặc SKU">
+      </label>
+      <label>Danh mục<select name="category">
+          <option value="">Tất cả danh mục</option>
+          <% categories.forEach(item => { %>
+            <option value="<%= item %>" <%= category === item ? 'selected' : '' %>><%= item %></option>
+          <% }) %>
+
+        </select>
+      </label>
+      <label>Sắp xếp<select name="sort">
+          <option value=""><%= q ? 'Liên quan nhất' : 'Mặc định' %></option>
+          <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Mới nhất</option>
+        </select>
+      </label>
+
+      <% if (section) { %>
+        <input type="hidden" name="section" value="<%= section %>">
+      <% } %>
+
+      <button class="button">Tìm kiếm</button>
+      <a href="/search" class="reset-link">Bỏ lọc</a>
+    </form>
+
+    <% if (books.length) { %>
+
+      <div class="book-grid">
+        <% books.forEach(book => { %>
+          <%- include('partials/book', { book }) %>
+        <% }) %>
+      </div>
+
+      <% if (pages > 1) { %>
+
+        <nav class="pagination" aria-label="Phân trang sản phẩm">
+
+          <% if (page > 1) { %>
+            <a href="<%= pageUrl(page - 1) %>">← Trước</a>
+          <% } %>
+
+          <% for (let number = Math.max(1, page - 2); number <= Math.min(pages, page + 2); number++) { %>
+
+            <a href="<%= pageUrl(number) %>" <%- number === page ? 'aria-current="page"' : '' %>><%= number %></a>
+
+          <% } %>
+
+          <% if (page < pages) { %>
+            <a href="<%= pageUrl(page + 1) %>">Sau →</a>
+          <% } %>
+
+          <span>Trang <%= page %> / <%= pages %></span>
+        </nav>
+
+      <% } %>
+
+    <% } else { %>
+
+      <div class="empty">
+        <h2>Chưa tìm thấy sản phẩm phù hợp</h2>
+        <p>Thử từ khóa hoặc danh mục khác.</p>
+        <a class="button" href="/search">Xem tất cả sản phẩm</a>
+      </div>
+
+    <% } %>
+
+  </section>
+
+<% } %>
+
+<%- include('partials/footer') %>

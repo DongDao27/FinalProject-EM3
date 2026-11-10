@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Đường dẫn">
+    <a href="/">Trang chủ</a>
+    <span>/</span>
+    <a href="/search">Sản
+      phẩm</a>
+    <span>/</span>
+    <span><%= book.title %></span>
+  </nav>
+  <section class="detail">
+    <div class="detail-cover">
+      <%- include('partials/cover', { book }) %><small>
+        <%= book.image ? 'Hình ảnh sản phẩm' : 'Bìa minh họa của ThuThanh Bookstore' %></small>
+    </div>
+    <div class="detail-info">
+      <span class="eyebrow"><%= book.category %></span>
+      <h1><%= book.title %></h1>
+
+      <% if (book.author) { %>
+        <p class="muted">Tác giả: <strong><%= book.author %></strong>
+        </p>
+      <% } %>
+
+      <p class="detail-price"><%= money(book.price) %></p>
+
+      <% if (book.description) { %>
+
+        <div class="description-summary">
+          <h2>Giới thiệu sản phẩm</h2>
+          <p><%= book.description.split('\n\n')[0] %></p>
+          <a href="#product-description">Đọc mô tả đầy đủ ↓</a>
+        </div>
+
+      <% } %>
+
+      <dl class="book-specs">
+
+        <% if (book.sku) { %>
+          <div>
+            <dt>Mã sản phẩm</dt>
+            <dd><%= book.sku %></dd>
+          </div>
+        <% } %>
+
+        <% if (book.publisher) { %>
+          <div>
+            <dt>NXB / Thương hiệu</dt>
+            <dd><%= book.publisher %></dd>
+          </div>
+        <% } %>
+
+        <% if (book.pages) { %>
+          <div>
+            <dt>Số trang</dt>
+            <dd><%= book.pages %> trang</dd>
+          </div>
+        <% } %>
+
+        <div>
+          <dt>Danh mục</dt>
+          <dd><%= book.category %></dd>
+        </div>
+      </dl>
+      <form action="/cart/add" method="post" class="purchase-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="bookId" value="<%= book._id %>">
+        <label>Số lượng
+          <input type="number" name="quantity" value="1" min="1" max="99" required>
+        </label>
+        <button class="button" formaction="/cart/buy-now">Mua ngay</button>
+        <button class="icon-cart-button" aria-label="Thêm <%= book.title %> vào giỏ" title="Thêm vào giỏ hàng">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M2 3h3l3 12h11l3-9H6" />
+            <circle cx="9" cy="20" r="1.5" />
+            <circle cx="19" cy="20" r="1.5" />
+          </svg>
+        </button>
+      </form>
+      <p class="payment-note">Thanh toán khi nhận hàng · Không cần thanh toán trước</p>
+    </div>
+  </section>
+  <section id="product-description" class="product-description">
+    <h2>Mô tả sản phẩm</h2>
+    <p class="description"><%= book.description %></p>
+  </section>
+</div>
+<%- include('partials/footer') %>

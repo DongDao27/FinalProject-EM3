@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+<section class="container page-section">
+  <a class="arrow-link" href="/cart">← Quay lại giỏ hàng</a>
+  <h1>Gửi sách đến bạn</h1>
+  <p class="muted">Hoàn tất thông tin nhận hàng. Bạn chỉ thanh toán khi nhận sách.</p>
+  <% if (error) { %>
+    <div class="notice error" role="alert"><%= error %></div>
+  <% } %>
+  <form action="/checkout" method="post" class="checkout-layout">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="checkoutToken" value="<%= checkoutToken %>">
+    <input type="hidden" name="buyNow" value="<%= buyNow ? '1' : '0' %>">
+    <div class="form-stack checkout-fields">
+      <h2>Thông tin người nhận</h2>
+      <label>Họ và tên
+        <input name="name" autocomplete="name" maxlength="80" required value="<%= values.name || '' %>">
+      </label>
+      <label>Số điện thoại
+        <input type="tel" name="phone" autocomplete="tel" pattern="0[0-9]{9}" maxlength="10" required
+          placeholder="Ví dụ: 0912345678" value="<%= values.phone || '' %>">
+      </label>
+      <label>Địa chỉ nhận hàng
+        <textarea name="address" autocomplete="street-address" minlength="10" maxlength="300" rows="3" required
+          placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố"><%= values.address || '' %></textarea>
+      </label>
+      <label>Ghi chú <span class="muted">(không bắt buộc)</span>
+        <textarea name="note" maxlength="500" rows="2"
+          placeholder="Lời nhắn cho đơn hàng"><%= values.note || '' %></textarea>
+      </label>
+      <div class="cod-box">
+        <span class="cod-dot" aria-hidden="true"></span>
+        <div>
+          <strong>Thanh toán khi nhận hàng (COD)</strong>
+          <p>Thanh toán trực tiếp cho nhân viên giao hàng khi nhận sách.</p>
+        </div>
+      </div>
+    </div>
+    <aside class="summary">
+      <h2>Đơn sách của bạn</h2>
+      <% items.forEach(({ book, quantity }) => { %>
+        <div>
+          <span><%= book.title %> ×
+            <%= quantity %></span>
+          <strong><%= money(book.price * quantity) %></strong>
+        </div>
+      <% }) %>
+      <div>
+        <span>Phí giao
+          hàng</span>
+        <span>Miễn phí</span>
+      </div>
+      <div class="summary-total">
+        <span>Tổng thanh toán</span>
+        <strong><%= money(total) %></strong>
+      </div>
+      <button class="button full">Xác nhận đặt hàng <span aria-hidden="true">→</span>
+      </button>
+      <p class="payment-note">Sau khi đặt hàng, bạn sẽ được đưa về trang chủ.</p>
+    </aside>
+  </form>
+</section>
+<%- include('partials/footer') %>

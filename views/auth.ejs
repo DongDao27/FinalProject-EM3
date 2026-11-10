@@ -1,0 +1,56 @@
+<%- include('partials/header') %>
+<section class="auth-layout container">
+  <aside class="auth-aside">
+    <span class="eyebrow">THUTHANH BOOKSTORE</span>
+    <h1>Một người bạn.
+      <br>Ngàn trang sách.
+    </h1>
+    <p>Tạo một góc đọc cho riêng mình và để những câu chuyện đẹp đồng hành cùng bạn.</p>
+    <div class="auth-decoration" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <small>Mỗi ngày, thêm một trang mới.</small>
+  </aside>
+  <div class="auth-panel">
+    <span class="eyebrow">GÓC NHỎ CỦA BẠN</span>
+    <h2><%= register ? 'Chào mừng bạn đến ThuThanh' : 'Rất vui được gặp lại bạn' %></h2>
+    <p class="muted">
+      <%= register ? 'Đăng ký để bắt đầu hành trình đọc sách.' : 'Đăng nhập để tiếp tục hành trình khám phá.' %></p>
+
+    <% if (error) { %>
+      <div class="notice error" role="alert"><%= error %></div>
+    <% } %>
+
+    <form action="<%= register ? '/register' : '/login' %>" method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (register) { %>
+        <label>Họ và tên
+          <input name="name" autocomplete="name" maxlength="80" required value="<%= values.name || '' %>"
+            placeholder="Tên của bạn">
+        </label>
+      <% } %>
+      <label>Email
+        <input type="email" name="email" autocomplete="email" maxlength="254" required value="<%= values.email || '' %>"
+          placeholder="ban@example.com">
+      </label>
+      <label>Mật khẩu
+        <input type="password" name="password" autocomplete="<%= register ? 'new-password' : 'current-password' %>"
+          minlength="8" maxlength="128" required placeholder="Từ 8 đến 128 ký tự">
+      </label>
+      <% if (register) { %>
+        <label>Xác nhận mật khẩu
+          <input type="password" name="confirmPassword" autocomplete="new-password" minlength="8" maxlength="128" required
+            placeholder="Nhập lại mật khẩu">
+        </label>
+      <% } %>
+      <button class="button full"><%= register ? 'Tạo tài khoản' : 'Đăng nhập' %> <span aria-hidden="true">→</span>
+      </button>
+    </form>
+    <p class="auth-switch"><%= register ? 'Bạn đã có tài khoản?' : 'Bạn chưa có tài khoản?' %> <a
+        href="<%= register ? '/login' : '/register' %>"><%= register ? 'Đăng nhập' : 'Đăng ký ngay' %></a>
+    </p>
+  </div>
+</section>
+<%- include('partials/footer') %>
